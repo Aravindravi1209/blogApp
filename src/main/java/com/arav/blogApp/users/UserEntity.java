@@ -12,29 +12,28 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity(name="users")
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity extends BaseEntity {
+
     @Column(nullable = false, unique = true)
-    String username;
+    private String username;
     @Column(nullable = false)
-    @Setter
-    String password;
+    private String password;
     @Column(nullable = false, unique = true)
-    String email;
+    private String email;
     @Nullable
-    @Setter
-    String bio;
+    private String bio;
     @Nullable
-    @Setter
-    String image;
+    private String image;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<BlogEntity> authoredBlogs;
+    private Set<BlogEntity> authoredBlogs;
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likers")
-    Set<BlogEntity> likedBlogs;
+    private Set<BlogEntity> likedBlogs;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -42,10 +41,9 @@ public class UserEntity extends BaseEntity {
             joinColumns = @JoinColumn(name = "following_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id")
     )
-    Set<UserEntity> followers;
+
+    private Set<UserEntity> followers;
 
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "followers")
-    Set<UserEntity> following;
-
-
+    private Set<UserEntity> following;
 }

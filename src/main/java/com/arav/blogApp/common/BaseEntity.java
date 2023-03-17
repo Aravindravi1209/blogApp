@@ -1,6 +1,7 @@
 package com.arav.blogApp.common;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -8,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 
 @MappedSuperclass
+@Setter
+@Getter
 public abstract class BaseEntity {
 
     @Id
@@ -15,10 +18,10 @@ public abstract class BaseEntity {
     @Column(name = "id",nullable = false)
     Long id;
 
-    @Setter @CreationTimestamp
+    @CreationTimestamp
     Date createdAt;
 
-    @Setter @UpdateTimestamp
+    @UpdateTimestamp
     Date updatedAt;
 
 }

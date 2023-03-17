@@ -7,30 +7,33 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity(name="blogs")
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlogEntity extends BaseEntity {
 
     @Column(nullable = false,length = 100)
-    String title;
+    private String title;
 
     @Column(nullable = false,length = 100,unique = true)
-    String slug;
+    private String slug;
 
     @Column(nullable = false,length = 150)
-    String subtitle;
+    private String subtitle;
 
     @Column(columnDefinition = "TEXT",nullable = false)
-    String body;
+    private String body;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
-    UserEntity author;
+    private UserEntity author;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -38,8 +41,10 @@ public class BlogEntity extends BaseEntity {
             joinColumns = @JoinColumn(name = "blog_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    Set<UserEntity> likers;
+    private Set<UserEntity> likers;
 
     @OneToMany(mappedBy = "blog",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<CommentEntity> comments;
+    private Set<CommentEntity> comments;
+
+    private List<String> tags;
 }

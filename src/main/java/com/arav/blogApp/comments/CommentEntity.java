@@ -10,24 +10,26 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity(name="comments")
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentEntity extends BaseEntity {
 
     @Column(nullable = false,length = 100)
-    String title;
+    private String title;
 
     @Column(nullable = false,columnDefinition = "TEXT")
-    String body;
+    private String body;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
-    UserEntity author;
+    private UserEntity author;
 
     @ManyToOne
     @JoinColumn(name = "blog_id", nullable = false)
-    BlogEntity blog;
+    private BlogEntity blog;
 }
