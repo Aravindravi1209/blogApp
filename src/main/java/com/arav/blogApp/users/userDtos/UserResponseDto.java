@@ -1,7 +1,6 @@
-package com.arav.blogApp.users.dtos;
+package com.arav.blogApp.users.userDtos;
 
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 public class UserResponseDto {

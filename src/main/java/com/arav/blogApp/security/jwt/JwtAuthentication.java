@@ -1,6 +1,6 @@
 package com.arav.blogApp.security.jwt;
 
-import com.arav.blogApp.users.dtos.UserResponseDto;
+import com.arav.blogApp.users.userDtos.UserResponseDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
