@@ -5,10 +5,14 @@ import com.arav.blogApp.exceptions.AccessDeniedException;
 import com.arav.blogApp.exceptions.BadRequestException;
 import com.arav.blogApp.security.jwt.JwtService;
 import com.arav.blogApp.users.userDtos.CreateUserRequestDto;
+import com.arav.blogApp.users.userDtos.ProfileResponseDto;
 import com.arav.blogApp.users.userDtos.UserResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -64,5 +68,22 @@ public class UserService {
     public UserResponseDto findUserbyUsername(String username) {
         UserEntity userEntity = userRepository.findByUsername(username);
         return modelMapper.map(userEntity, UserResponseDto.class);
+    }
+
+    public List<ProfileResponseDto> getAllProfiles() throws BadRequestException {
+        List<UserEntity> userEntities = userRepository.findAll();
+        if(userEntities.isEmpty()) {
+            throw new BadRequestException("No users found.");
+        }
+        return userEntities.stream().map(userEntity -> modelMapper.map(userEntity, ProfileResponseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public ProfileResponseDto getProfile(String username) throws BadRequestException {
+        UserEntity userEntity = userRepository.findByUsername(username);
+        if(userEntity == null) {
+            throw new BadRequestException("User with username: "+username+" does not exist.");
+        }
+        return modelMapper.map(userEntity, ProfileResponseDto.class);
     }
 }
