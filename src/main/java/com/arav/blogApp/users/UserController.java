@@ -33,8 +33,11 @@ public class UserController {
     }
 
     @GetMapping("/profiles")
-    public ResponseEntity<List<ProfileResponseDto>> getAllProfiles() throws BadRequestException {
-        return ResponseEntity.ok(userService.getAllProfiles());
+    public ResponseEntity<List<ProfileResponseDto>> getAllProfiles(
+            @RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value="pageSize",defaultValue = "5",required = false) int pageSize
+    ) throws BadRequestException {
+        return ResponseEntity.ok(userService.getAllProfiles(pageNumber, pageSize));
     }
 
     @GetMapping("/profiles/{username}")

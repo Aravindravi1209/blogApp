@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler({BadRequestException.class, NullPointerException.class})
     public ResponseEntity handleBadRequest(BadRequestException e)
     {
         return ResponseEntity.badRequest().body(e.getMessage());

@@ -8,6 +8,8 @@ import com.arav.blogApp.users.userDtos.CreateUserRequestDto;
 import com.arav.blogApp.users.userDtos.ProfileResponseDto;
 import com.arav.blogApp.users.userDtos.UserResponseDto;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,9 @@ public class UserService {
         if(requestDto.getPassword().length() < 8) {
             throw new BadRequestException("Password must be at least 8 characters long.");
         }
+        if(requestDto.getEmail()==null || requestDto.getEmail().isEmpty()) {
+            throw new BadRequestException("Email cannot be empty.");
+        }
         if(!emailValidator.isValidEmail(requestDto.getEmail())) {
             throw new BadRequestException("Email provided is not valid.");
         }
@@ -70,8 +75,10 @@ public class UserService {
         return modelMapper.map(userEntity, UserResponseDto.class);
     }
 
-    public List<ProfileResponseDto> getAllProfiles() throws BadRequestException {
-        List<UserEntity> userEntities = userRepository.findAll();
+    public List<ProfileResponseDto> getAllProfiles(Integer pageNumber, Integer pageSize) throws BadRequestException {
+
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+        List<UserEntity> userEntities = userRepository.findAll(p).getContent();
         if(userEntities.isEmpty()) {
             throw new BadRequestException("No users found.");
         }
