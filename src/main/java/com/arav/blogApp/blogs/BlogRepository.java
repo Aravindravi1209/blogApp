@@ -1,4 +1,8 @@
 package com.arav.blogApp.blogs;
 
-public class BlogRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
 }

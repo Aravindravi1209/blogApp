@@ -31,8 +31,7 @@ public class UserService {
         this.jwtService = jwtService;
         this.emailValidator = emailValidator;
     }
-
-    public UserResponseDto createUser(CreateUserRequestDto requestDto) throws BadRequestException {
+    private void verifyDetails(CreateUserRequestDto requestDto) throws BadRequestException {
         if(userRepository.findByUsername(requestDto.getUsername()) != null) {
             throw new BadRequestException("User with username: "+requestDto.getUsername()+" already exists.");
         }
@@ -48,6 +47,10 @@ public class UserService {
         if(!emailValidator.isValidEmail(requestDto.getEmail())) {
             throw new BadRequestException("Email provided is not valid.");
         }
+    }
+
+    public UserResponseDto createUser(CreateUserRequestDto requestDto) throws BadRequestException {
+        verifyDetails(requestDto);
         UserEntity userEntity = modelMapper.map(requestDto, UserEntity.class);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         UserEntity savedUser = userRepository.save(userEntity);

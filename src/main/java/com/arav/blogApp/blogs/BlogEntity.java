@@ -3,6 +3,7 @@ package com.arav.blogApp.blogs;
 import com.arav.blogApp.comments.CommentEntity;
 import com.arav.blogApp.common.BaseEntity;
 import com.arav.blogApp.users.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class BlogEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT",nullable = false)
     private String body;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private UserEntity author;
