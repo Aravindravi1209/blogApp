@@ -7,6 +7,8 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import org.springframework.lang.NonNull;
 
+import java.util.List;
+
 @Data
 public class CreateBlogRequestDto {
     @NonNull
@@ -17,4 +19,6 @@ public class CreateBlogRequestDto {
     private String subtitle;
     @NonNull
     private String body;
+
+    private List<String> tags;
 }
