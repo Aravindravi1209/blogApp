@@ -29,12 +29,30 @@ public class BlogController {
     @GetMapping("/blogs")
     public ResponseEntity<List<BlogResponseDto>> getAllBlogs(
             @RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
-            @RequestParam(value="pageSize",defaultValue = "5",required = false) int pageSize) throws BadRequestException {
+            @RequestParam(value="pageSize",defaultValue = "10",required = false) int pageSize) throws BadRequestException {
         return ResponseEntity.ok(blogService.getAllBlogs(pageNumber,pageSize));
     }
 
     @GetMapping(value = "/blogs",params = "authorName")
-    public ResponseEntity<List<BlogResponseDto>> getBlogByAuthorName(@RequestParam String authorName) throws BadRequestException {
-        return ResponseEntity.ok(blogService.getBlogByAuthorName(authorName));
+    public ResponseEntity<List<BlogResponseDto>> getBlogByAuthorName(@RequestParam String authorName,
+    @RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
+    @RequestParam(value="pageSize",defaultValue = "10",required = false) int pageSize) throws BadRequestException
+    {
+        return ResponseEntity.ok(blogService.getBlogByAuthorName(authorName,pageNumber,pageSize));
     }
+
+    @GetMapping("/blogs/{slug}")
+    public ResponseEntity<BlogResponseDto> getBlogBySlug(@PathVariable String slug) throws BadRequestException {
+        return ResponseEntity.ok(blogService.getBlogBySlug(slug));
+    }
+
+    @GetMapping(value="/blogs",params = "tag")
+    public ResponseEntity<List<BlogResponseDto>> getBlogByTag(
+            @RequestParam String tag,
+            @RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value="pageSize",defaultValue = "10",required = false) int pageSize) throws BadRequestException
+    {
+        return ResponseEntity.ok(blogService.getBlogByTag(tag,pageNumber,pageSize));
+    }
+
 }

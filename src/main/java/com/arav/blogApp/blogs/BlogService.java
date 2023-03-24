@@ -49,10 +49,42 @@ public class BlogService {
 
     }
 
-    public List<BlogResponseDto> getBlogByAuthorName(String authorName) throws BadRequestException {
-List<BlogEntity> blogEntities = blogRepository.findAllByAuthorUsername(authorName);
-        if(blogEntities.isEmpty()){
+    public List<BlogResponseDto> getBlogByAuthorName(String authorName, Integer pageNumber, Integer pageSize) throws BadRequestException {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<BlogEntity> blogEntities = blogRepository.findAllByAuthorUsername(authorName, pageable).stream().toList();
+        List<BlogEntity> totalBlogEntities = blogRepository.findAllByAuthorUsername(authorName);
+        if(blogEntities.isEmpty() && totalBlogEntities.isEmpty()){
             throw new BadRequestException("No blogs found for author: "+authorName);
+        }
+        if(blogEntities.isEmpty()){
+            throw new BadRequestException("No more blogs found for author: "+authorName);
+        }
+        return blogEntities.stream().map(blogEntity -> {
+            var response = modelMapper.map(blogEntity, BlogResponseDto.class);
+            response.setAuthor(blogEntity.getAuthor().getUsername());
+            return response;
+        }).collect(Collectors.toList());
+    }
+
+    public BlogResponseDto getBlogBySlug(String slug) throws BadRequestException {
+        var blogEntity = blogRepository.findBySlug(slug);
+        if(blogEntity == null){
+            throw new BadRequestException("No blog found for slug: "+slug);
+        }
+        var response = modelMapper.map(blogEntity, BlogResponseDto.class);
+        response.setAuthor(blogEntity.getAuthor().getUsername());
+        return response;
+    }
+
+    public List<BlogResponseDto> getBlogByTag(String tag, int pageNumber, int pageSize) throws BadRequestException {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<BlogEntity> blogEntities = blogRepository.findAllByTags(tag, pageable).stream().toList();
+        List<BlogEntity> totalBlogEntities = blogRepository.findAllByTags(tag);
+        if(blogEntities.isEmpty() && totalBlogEntities.isEmpty()){
+            throw new BadRequestException("No blogs found for tag: "+tag);
+        }
+        if(blogEntities.isEmpty()){
+            throw new BadRequestException("No more blogs found for tag: "+tag);
         }
         return blogEntities.stream().map(blogEntity -> {
             var response = modelMapper.map(blogEntity, BlogResponseDto.class);
