@@ -2,6 +2,7 @@ package com.arav.blogApp.blogs;
 
 import com.arav.blogApp.blogs.blogDtos.BlogResponseDto;
 import com.arav.blogApp.blogs.blogDtos.CreateBlogRequestDto;
+import com.arav.blogApp.blogs.blogDtos.UpdateBlogRequestDto;
 import com.arav.blogApp.exceptions.BadRequestException;
 import com.arav.blogApp.users.userDtos.UserResponseDto;
 import org.springframework.http.ResponseEntity;
@@ -52,4 +53,10 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getBlogByTag(tag));
     }
 
+    @PatchMapping("/blogs/{slug}")
+    public ResponseEntity<BlogResponseDto> updateBlog(@PathVariable String slug,
+                                                      @RequestBody UpdateBlogRequestDto blogRequestDto,
+                                                      @AuthenticationPrincipal UserResponseDto user) throws BadRequestException {
+        return ResponseEntity.ok(blogService.updateBlog(slug,blogRequestDto,user));
+    }
 }

@@ -2,6 +2,7 @@ package com.arav.blogApp.blogs;
 
 import com.arav.blogApp.blogs.blogDtos.BlogResponseDto;
 import com.arav.blogApp.blogs.blogDtos.CreateBlogRequestDto;
+import com.arav.blogApp.blogs.blogDtos.UpdateBlogRequestDto;
 import com.arav.blogApp.exceptions.BadRequestException;
 import com.arav.blogApp.users.UserRepository;
 import com.arav.blogApp.users.userDtos.ProfileResponseDto;
@@ -86,5 +87,31 @@ public class BlogService {
             response.setAuthor(blogEntity.getAuthor().getUsername());
             return response;
         }).collect(Collectors.toList());
+    }
+
+    public BlogResponseDto updateBlog(String slug, UpdateBlogRequestDto blogRequestDto, UserResponseDto user) throws BadRequestException {
+        var blogEntity = blogRepository.findBySlug(slug);
+        if(blogEntity == null){
+            throw new BadRequestException("No blog found for slug: "+slug);
+        }
+        if(!blogEntity.getAuthor().getUsername().equals(user.getUsername())){
+            throw new BadRequestException("You are not authorized to update this blog.");
+        }
+        if(blogRequestDto.getTitle() != null){
+            blogEntity.setTitle(blogRequestDto.getTitle());
+        }
+        if(blogRequestDto.getBody() != null){
+            blogEntity.setBody(blogRequestDto.getBody());
+        }
+        if(blogRequestDto.getTags() != null){
+            blogEntity.setTags(blogRequestDto.getTags());
+        }
+        if(blogRequestDto.getSubtitle() != null){
+            blogEntity.setSubtitle(blogRequestDto.getSubtitle());
+        }
+        var savedBlog = blogRepository.save(blogEntity);
+        var response = modelMapper.map(savedBlog, BlogResponseDto.class);
+        response.setAuthor(user.getUsername());
+        return response;
     }
 }
