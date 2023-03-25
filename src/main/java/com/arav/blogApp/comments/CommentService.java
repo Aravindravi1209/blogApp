@@ -81,4 +81,16 @@ public class CommentService {
         response.setBlogName(blog.getTitle());
         return response;
     }
+
+    public void deleteComment(String slug, Long id, UserResponseDto user) throws BadRequestException {
+        var blog = blogRepository.findBySlug(slug);
+        if(blog==null){
+            throw new BadRequestException("Blog not found");
+        }
+        var comment = commentRepository.findById(id).get();
+        if(!comment.getAuthor().getUsername().equals(user.getUsername())){
+            throw new BadRequestException("You are not the author of this comment");
+        }
+        commentRepository.delete(comment);
+    }
 }

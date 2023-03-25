@@ -44,4 +44,12 @@ public class CommentController {
         var updatedComment = commentService.updateComment(commentRequestDto,slug,id,user);
         return ResponseEntity.ok(updatedComment);
     }
+
+    @DeleteMapping("{slug}/comments/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable String slug,
+                                              @PathVariable Long id,
+                                              @AuthenticationPrincipal UserResponseDto user) throws BadRequestException {
+        commentService.deleteComment(slug,id,user);
+        return ResponseEntity.noContent().build();
+    }
 }
