@@ -47,12 +47,9 @@ public class BlogController {
     }
 
     @GetMapping(value="/blogs",params = "tag")
-    public ResponseEntity<List<BlogResponseDto>> getBlogByTag(
-            @RequestParam String tag,
-            @RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
-            @RequestParam(value="pageSize",defaultValue = "10",required = false) int pageSize) throws BadRequestException
+    public ResponseEntity<List<BlogResponseDto>> getBlogByTag(@RequestParam String tag) throws BadRequestException
     {
-        return ResponseEntity.ok(blogService.getBlogByTag(tag,pageNumber,pageSize));
+        return ResponseEntity.ok(blogService.getBlogByTag(tag));
     }
 
 }

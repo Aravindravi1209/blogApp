@@ -76,15 +76,10 @@ public class BlogService {
         return response;
     }
 
-    public List<BlogResponseDto> getBlogByTag(String tag, int pageNumber, int pageSize) throws BadRequestException {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        List<BlogEntity> blogEntities = blogRepository.findAllByTags(tag, pageable).stream().toList();
-        List<BlogEntity> totalBlogEntities = blogRepository.findAllByTags(tag);
-        if(blogEntities.isEmpty() && totalBlogEntities.isEmpty()){
-            throw new BadRequestException("No blogs found for tag: "+tag);
-        }
+    public List<BlogResponseDto> getBlogByTag(String tag) throws BadRequestException {
+        List<BlogEntity> blogEntities = blogRepository.findAllByTag(tag);
         if(blogEntities.isEmpty()){
-            throw new BadRequestException("No more blogs found for tag: "+tag);
+            throw new BadRequestException("No blogs found for tag: "+tag);
         }
         return blogEntities.stream().map(blogEntity -> {
             var response = modelMapper.map(blogEntity, BlogResponseDto.class);
